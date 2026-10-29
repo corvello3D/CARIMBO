@@ -77,7 +77,7 @@ h1{font-size:21px} h2{font-size:16px}
 .who .av{width:28px;height:28px;border-radius:50%;background:var(--line);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
 .pane{flex:1;min-height:0;position:relative;overflow:auto}
 #gen{position:absolute;inset:0;width:100%;height:100%;border:0;background:var(--bg)}
-.nav{display:grid;grid-template-columns:repeat(3,1fr);background:var(--panel);border-top:1px solid var(--line);padding:6px max(8px,env(safe-area-inset-right,0px)) max(8px,env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+.nav{display:grid;grid-template-columns:repeat(4,1fr);background:var(--panel);border-top:1px solid var(--line);padding:6px max(8px,env(safe-area-inset-right,0px)) max(8px,env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
 .nav button{border:0;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:600;padding:5px;cursor:pointer;min-height:48px}
 .nav button[aria-current="page"]{color:#fff}
 .nav svg{width:22px;height:22px}
@@ -133,6 +133,25 @@ td{padding:11px 14px;border-top:1px solid #1b2430}
 td.n{font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums}
 .st-ok{background:var(--ok-soft);color:var(--ok)} .st-late{background:var(--yel-soft);color:var(--yel)} .st-off{background:rgb(141 151 166 / .16);color:#aab3c0} .st-man{background:var(--blue-soft);color:#9bb8ff}
 .note{font-size:12px;color:var(--dim);text-align:center}
+/* ajuda */
+#vHelp .col{max-width:560px}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;counter-reset:st}
+.steps li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:start;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px}
+.steps .num{width:34px;height:34px;border-radius:10px;background:var(--chrome);color:var(--on-chrome);display:flex;align-items:center;justify-content:center;font:700 14px var(--mono)}
+.steps h3{margin:0 0 4px;font:600 15px var(--body)}
+.steps p{margin:0;font-size:14px;color:#c5ccd6;line-height:1.5}
+.steps .ill{margin-top:10px;border-radius:12px;background:#080c12;background-image:var(--layers);padding:12px;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.legend3{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.legend3 span{font:600 12px var(--mono);padding:4px 9px;border-radius:7px}
+.faq{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:16px}
+.faq details{border-top:1px solid #1b2430}
+.faq details:first-child{border-top:0}
+.faq summary{cursor:pointer;list-style:none;padding:14px 16px;font-weight:600;font-size:14px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"";width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg) translateY(-3px);flex:none;transition:transform .15s}
+.faq details[open] summary::after{transform:rotate(-135deg)}
+.faq details p{margin:0;padding:0 16px 14px;font-size:14px;color:#c5ccd6;line-height:1.55}
+.tipbox{display:flex;gap:10px;align-items:flex-start;background:var(--blue-soft);border:1px solid rgb(91 140 255 / .35);border-radius:14px;padding:12px 14px;font-size:14px;color:#cfdcff;line-height:1.5}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -159,6 +178,7 @@ td.n{font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums}
       <button class="btn chrome" type="submit" id="loginBtn">Entrar</button>
       <button class="btn line" type="button" id="googleBtn">Entrar com Google</button>
     </form>
+    <button class="btn line" type="button" id="toHelp">Como funciona?</button>
     <button class="btn ghost" type="button" id="toAdmin">Abrir o painel do dono (teste)</button>
   </div>
 </section>
@@ -245,7 +265,60 @@ td.n{font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums}
     <button type="button" data-p="gen" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg>Gerador</button>
     <button type="button" data-p="shop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h16l-1.5 11h-13z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>Loja</button>
     <button type="button" data-p="acc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Conta</button>
+    <button type="button" data-p="help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17h.01"/></svg>Ajuda</button>
   </nav>
+</section>
+
+
+<!-- ajuda -->
+<section class="view" id="vHelp" hidden>
+  <div class="col">
+    <div class="top"><img class="logo" data-logo src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="Corvello 3D"><button class="btn line" type="button" id="helpBack" style="min-height:40px;padding:8px 14px;font-size:14px">Voltar</button></div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <h1>Como funciona</h1>
+      <p class="muted small" style="margin:0;line-height:1.5">Da sua imagem até o STL do carimbo pronto para imprimir, em 5 passos.</p>
+    </div>
+    <ol class="steps">
+      <li><span class="num">1</span><div><h3>Escolha a imagem</h3>
+        <p>Toque em <b>Escolher imagem</b> e mande um PNG, JPG ou SVG. Tudo que é <b>preto vira relevo</b>, e o branco fica liso.</p>
+        <div class="ill">
+          <svg width="74" height="74" viewBox="0 0 74 74" aria-hidden="true"><rect x="1" y="1" width="72" height="72" rx="10" fill="#f4f6f9"/><path d="M37 58C20 46 15 36 23 29c6-5 12-2 14 4 2-6 8-9 14-4 8 7 3 17-14 29z" fill="#0d141d"/></svg>
+          <svg width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><path d="M2 10h20M15 3l7 7-7 7" fill="none" stroke="#8d97a6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="74" height="74" viewBox="0 0 74 74" aria-hidden="true"><ellipse cx="37" cy="44" rx="30" ry="12" fill="#4b5566"/><ellipse cx="37" cy="40" rx="30" ry="12" fill="#8d97a6"/><path d="M37 46C26 39 23 33 28 29c4-3 8-1 9 2 1-3 5-5 9-2 5 4 2 10-9 17z" fill="#f4f6f9"/></svg>
+        </div>
+        <p style="margin-top:10px" class="small muted">Dica: use arte bem contrastada, preto puro em fundo branco. Foto com sombra ou fundo cinza confunde o app. Se a arte for branca em fundo preto, marque <b>Inverter</b> em Avançado.</p>
+      </div></li>
+      <li><span class="num">2</span><div><h3>Confira a espessura das linhas</h3>
+        <p>Na aba <b>Marca</b> você vê como o carimbo marca o doce, com cada linha pintada pela espessura:</p>
+        <div class="legend3"><span style="background:var(--red-soft);color:var(--red)">vermelho · abaixo de 0,4 mm</span><span style="background:var(--yel-soft);color:var(--yel)">amarelo · 0,4 a 0,8 mm</span><span style="background:var(--blue-soft);color:#9bb8ff">azul · 0,8 mm ou mais</span></div>
+        <p style="margin-top:10px">Vermelho provavelmente não imprime nem marca. Amarelo marca fraco. Toque em <b>Corrigir só as linhas finas até 0,80 mm</b> e só as linhas finas engrossam.</p>
+      </div></li>
+      <li><span class="num">3</span><div><h3>Ajuste se precisar</h3>
+        <p>Em <b>Ajustes</b>, use os botões <b>−</b> e <b>+</b> ou toque no número para digitar: altura do relevo (padrão 6 mm), margem até a borda e tamanho da arte. A aba <b>3D</b> mostra a peça pronta, e dá para girar com o dedo.</p>
+      </div></li>
+      <li><span class="num">4</span><div><h3>Baixe o STL</h3>
+        <p>Dê um nome ao arquivo na barra de baixo e toque em <b>Baixar</b>. Sai um STL só, com base e relevo unidos e espelhado do jeito certo para marcar o doce. <b>Cada download usa 1 carimbo do seu plano.</b> O medidor no topo mostra quantos ainda tem no mês.</p>
+      </div></li>
+      <li><span class="num">5</span><div><h3>Monte um kit (opcional)</h3>
+        <p>Toque em <b>+ Kit</b> em cada carimbo que quiser juntar. Na aba <b>Kit</b>, todos ficam lado a lado com 5 mm de espaço, num STL único, pronto para imprimir vários de uma vez. Um kit usa 1 carimbo por peça.</p>
+      </div></li>
+    </ol>
+
+    <div class="tipbox"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9bb8ff" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="flex:none;margin-top:1px"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/></svg>
+      <span>Seus ajustes ficam guardados no aparelho. Da próxima vez o app já abre do jeito que você deixou.</span></div>
+
+    <span class="sec">Perguntas frequentes</span>
+    <div class="faq">
+      <details><summary>Quando o limite do mês renova?</summary><p>No mesmo dia do mês em que você assinou. A data aparece em <b>Conta</b>. Carimbos que sobram não acumulam para o mês seguinte.</p></details>
+      <details><summary>Acabou o limite antes do fim do mês. E agora?</summary><p>Você pode mudar para um plano maior na hora ou comprar um pacote extra de carimbos, que vale até a próxima renovação.</p></details>
+      <details><summary>Baixar o mesmo carimbo de novo gasta outro?</summary><p>Sim, cada download conta 1. Por isso, guarde o STL no seu computador ou celular depois de baixar.</p></details>
+      <details><summary>Que tipo de imagem funciona melhor?</summary><p>Desenho em preto chapado sobre fundo branco, sem tons de cinza, de preferência PNG ou SVG. Linhas com pelo menos 0,8 mm no tamanho final dão o melhor resultado.</p></details>
+      <details><summary>O que são os STLs da Loja?</summary><p>São carimbos, kits e ejetores prontos da Corvello 3D. Você compra uma vez e eles ficam em <b>Conta → Meus STLs comprados</b> para baixar quando quiser. Os planos Pro e Ilimitado têm desconto.</p></details>
+      <details><summary>Como cancelo?</summary><p>Em <b>Conta → Cancelar</b>. Você não paga os próximos meses, e o acesso fica bloqueado depois do cancelamento.</p></details>
+      <details><summary>Posso usar no celular e no computador?</summary><p>Pode. É só entrar com o mesmo e-mail e senha. O limite do mês é o mesmo nos dois.</p></details>
+    </div>
+    <button class="btn chrome" type="button" id="helpGo">Entendi, vamos criar</button>
+  </div>
 </section>
 
 <!-- 5 · painel do dono -->
@@ -314,7 +387,7 @@ function limitOf() { const p = plan(S.plan); return p ? p.limit + (S.extra || 0)
 function active() { return S.plan && S.status === "ok"; }
 
 // ---------- navegação ----------
-const views = ["vLogin", "vPlans", "vPay", "vApp", "vAdmin"];
+const views = ["vLogin", "vPlans", "vPay", "vApp", "vAdmin", "vHelp"];
 function show(v) { views.forEach(x => $(x).hidden = x !== v); window.scrollTo(0, 0); if (v === "vApp") refreshApp(); if (v === "vAdmin") renderAdmin(); }
 function route() {
   if (!S.user) show("vLogin");
@@ -393,7 +466,12 @@ function setPane(p) {
   $("usageBox").hidden = p !== "gen";
   if (p === "shop") renderShop(); if (p === "acc") renderAcc();
 }
-document.querySelectorAll(".nav button").forEach(b => b.onclick = () => setPane(b.dataset.p));
+document.querySelectorAll(".nav button").forEach(b => b.onclick = () => b.dataset.p === "help" ? openHelp("vApp") : setPane(b.dataset.p));
+let helpBack = "vLogin";
+function openHelp(from) { helpBack = from; show("vHelp"); }
+$("toHelp").onclick = () => openHelp("vLogin");
+$("helpBack").onclick = () => helpBack === "vApp" ? show("vApp") : route();
+$("helpGo").onclick = () => helpBack === "vApp" ? (setPane("gen"), show("vApp")) : route();
 $("whoBtn").onclick = () => setPane("acc");
 function refreshApp() {
   const p = plan(S.plan); if (!p) return;
