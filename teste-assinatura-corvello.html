@@ -236,7 +236,7 @@ td.n{font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums}
   <div class="apphead">
     <div class="top">
       <img class="logo" data-logo src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="Corvello 3D" style="height:34px">
-      <button class="who" type="button" id="whoBtn"><span class="mono" style="font-size:11px;font-weight:600;letter-spacing:.06em" id="whoPlan">PRO</span><span class="av" id="whoAv">AS</span></button>
+      <div style="display:flex;gap:8px;align-items:center"><button class="who" type="button" id="ownerBtn" hidden style="padding:6px 12px"><span class="mono" style="font-size:11px;font-weight:600;letter-spacing:.06em">PAINEL DO DONO</span></button><button class="who" type="button" id="whoBtn"><span class="mono" style="font-size:11px;font-weight:600;letter-spacing:.06em" id="whoPlan">PRO</span><span class="av" id="whoAv">AS</span></button></div>
     </div>
     <div class="usage" id="usageBox">
       <div class="l"><span class="muted">Carimbos este mês</span><span class="mono"><b style="font-weight:500;color:#fff" id="uUsed">0</b> <span class="muted" id="uLim">de 60</span></span></div>
@@ -564,6 +564,7 @@ $("payGo").onclick = async () => {
     const r = await rpc("test_pay", { kind: it.kind, item: it.id || null, label: it.what, amount: it.val });
     if (!r || !r.ok) throw new Error("O pagamento não foi aceito. Tente de novo.");
     await loadMe(); pending = null;
+    if (it.kind === "plan" && !active()) throw new Error("O pagamento foi registrado, mas o plano não ativou no servidor (situação: " + (P().status || "vazia") + ", plano: " + (P().plan || "nenhum") + "). Mande um print desta mensagem.");
     if (it.kind === "plan") { toast("Pagamento aprovado. Plano " + plan(it.id).name + " ativo."); setPane("gen"); }
     else if (it.kind === "extra") toast("+" + EXTRA.qty + " carimbos liberados.");
     else if (it.kind === "renew") toast("Assinatura renovada.");
@@ -589,6 +590,7 @@ $("helpBack").onclick = () => helpBack === "vApp" ? show("vApp") : route();
 $("helpGo").onclick = () => helpBack === "vApp" ? (setPane("gen"), show("vApp")) : route();
 $("whoBtn").onclick = () => setPane("acc");
 function refreshApp() {
+  $("ownerBtn").hidden = !S.owner;
   const p = plan(P().plan); if (!p) return;
   $("whoPlan").textContent = p.name.toUpperCase(); $("whoAv").textContent = initials(P().name);
   const lim = limitOf(), used = P().used || 0;
@@ -617,15 +619,15 @@ function bootGen() {
         const isKit = w.eval("state.tab") === "kit";
         const n = isKit ? w.eval("kit.items.length") : 1;
         const p = plan(P().plan);
-        if (!active()) { if (P().status === "late") openLate(); else show("vPlans"); return; }
+        if (!active()) { if (P().status === "late") openLate(); else { toast("Seu plano não está ativo (situação: " + (P().status || "vazia") + "). Escolha um plano."); show("vPlans"); } return; }
         if (isKit && n > p.kitMax) { openKitLimit(n, p); return; }
         let r;
-        try { r = await rpc("consume_credits", { n }); } catch (err) { toast(err.message); return; }
+        try { r = await rpc("consume_credits", { n }); } catch (err) { toast("Erro ao liberar o download: " + err.message); return; }
         if (!r || !r.ok) {
           const why = r && r.reason;
           if (why === "limit") { S.profile.used = r.used; refreshApp(); openLimit(n); }
           else if (why === "late") { S.profile.status = "late"; openLate(); }
-          else { await route(); }
+          else { toast("Download bloqueado pelo servidor (" + (why || "sem motivo") + "). Mande um print."); }
           return;
         }
         S.profile.used = r.used; refreshApp();
@@ -735,6 +737,7 @@ $("tMonth").onclick = async () => {
 };
 $("tLate").onclick = async () => { try { await rpc("admin_set", { uid: ses.user.id, new_status: "late", add_extra: 0 }); await loadMe(); refreshApp(); } catch (err) { toast(err.message); } };
 $("tAdmin").onclick = () => show("vAdmin");
+$("ownerBtn").onclick = () => show("vAdmin");
 $("tOut").onclick = logout;
 
 // ---------- painel do dono (dados reais) ----------
