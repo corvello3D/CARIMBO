@@ -1,0 +1,30 @@
+{
+ "name": "Gerador de Carimbos Corvello 3D",
+ "short_name": "Carimbos C3D",
+ "description": "Imagem P&B ou SVG vira STL de carimbo em malha única.",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "portrait",
+ "background_color": "#0b1017",
+ "theme_color": "#0b1017",
+ "lang": "pt-BR",
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}
